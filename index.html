@@ -219,39 +219,69 @@ canvas{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hs.in-cart{background:linear-gradient(135deg,#27ae60 0%,#1e8449 100%) !important;}.hs.in-cart:hover{box-shadow:0 5px 14px rgba(39,174,96,.45)}.hs-label{display:none}.hs-icon{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-shrink:0}.hs-icon svg{width:55%;height:55%}.v-zoomed #v-page-area{overflow:auto}.v-zoomed-area{overflow:hidden}#v-pdf-wrap{will-change:transform}.hs-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(20,15,10,.88);color:#fff;font-family:'Montserrat',Arial,sans-serif;font-size:10px;font-weight:500;white-space:nowrap;padding:5px 9px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .18s;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:180px;overflow:hidden;text-overflow:ellipsis;}.hs-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(20,15,10,.88);}.hs:hover .hs-tip{opacity:1}
 @media (max-width:600px){
-  /* Topbar: flat flex, sem absolute */
-  .topbar{height:44px;padding:0 6px;position:relative}
-  .tb-logo{display:none}
-  .tb-center{position:static;transform:none;flex:1;justify-content:center;gap:0;overflow:hidden}
-  .tb-right{flex-shrink:0;margin-left:0}
-  .tb-icon-btn{width:26px;height:26px;flex-shrink:0}
-  .tb-icon-btn svg{width:13px;height:13px}
-  .tb-divider{margin:0 1px;height:14px}
-  /* Esconder ícones menos essenciais no mobile */
+  /* ── Topbar: 2 linhas ── */
+  .topbar{
+    height:auto;padding:6px 8px;flex-wrap:wrap;gap:4px;position:relative;
+  }
+  /* Linha 1: título + carrinho + pesquisar */
+  .tb-logo{
+    display:block;font-size:11px;letter-spacing:.1em;
+    flex:1;min-width:0;order:1;
+  }
+  .tb-right{order:2;flex-shrink:0;margin-left:0;gap:5px}
+  .btn-tb-search{
+    padding:0 10px;height:28px;font-size:10px;gap:5px;
+  }
+  /* Linha 2: navegação centralizada */
+  .tb-center{
+    position:static;transform:none;
+    order:3;width:100%;
+    justify-content:center;gap:2px;
+    border-top:1px solid rgba(255,255,255,.1);
+    padding-top:5px;
+  }
+  .tb-icon-btn{width:30px;height:30px;flex-shrink:0}
+  .tb-icon-btn svg{width:14px;height:14px}
+  .tb-divider{margin:0 3px;height:16px}
+  .tb-page input{width:32px;font-size:12px}
+  .tb-page span{font-size:12px}
+  /* Esconder download e share no mobile */
   .tb-icon-btn.tb-hide-mobile{display:none}
-  /* Page input menor */
-  .tb-page input{width:28px;font-size:11px}
-  .tb-page span{font-size:11px}
-  /* Botão pesquisar — só ícone no mobile */
-  .btn-tb-search .btn-tb-search-txt{display:none}
-  .btn-tb-search{padding:0 7px;height:26px;gap:0;min-width:26px;justify-content:center}
-  /* Page area */
-  .page-area{padding:6px 2px;overflow:visible}
-  /* Setas laterais */
-  .side-btn{width:36px;height:64px;font-size:22px;font-weight:700;opacity:.85;z-index:10;background:rgba(90,58,42,.75);backdrop-filter:blur(4px);border-radius:8px}
-  #btn-prev-s{left:0;border-radius:0 8px 8px 0}
-  #btn-next-s{right:0;border-radius:8px 0 0 8px}
-  /* Cart panel full width */
+  /* Pesquisar: só texto no mobile (sem ícone) */
+  .btn-tb-search .btn-tb-search-txt{display:inline}
+
+  /* ── PDF: ocupa toda a largura ── */
+  .page-area{
+    padding:0;overflow:visible;
+    align-items:flex-start;
+  }
+  .pdf-wrap{
+    width:100% !important;
+    box-shadow:none;
+  }
+  #v-canvas{
+    width:100% !important;
+    height:auto !important;
+    display:block;
+  }
+
+  /* ── Setas: escondidas no mobile (usa swipe) ── */
+  .side-btn{display:none}
+
+  /* ── Cart panel full width ── */
   #cart-panel{width:100%;right:-100%;border-radius:0}
   #cart-panel.open{right:0}
-  /* Modals */
+
+  /* ── Modais ── */
   .modal-box{width:96vw;max-height:90vh;border-radius:14px}
   .order-box{width:96vw;max-height:92vh;border-radius:14px;margin:4vh auto}
   .of-row{flex-direction:column;gap:0}
   .seller-grid{grid-template-columns:1fr 1fr}
-  /* Search */
+
+  /* ── Search ── */
   .search-box{width:96vw;border-radius:12px}
-  /* Tooltip acima */
+
+  /* ── Tooltip ── */
   .hs-tip{font-size:9px;padding:4px 7px;max-width:130px}
 }</style>
 </head>
@@ -475,11 +505,11 @@ canvas{display:block}
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 emailjs.init('F59m7bx-Dc63S4zwl');
 var CART_IMG_D='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiByeT0iMjIiIGZpbGw9IiNDMDM5MkIiLz4KICA8ZyBmaWxsPSJ3aGl0ZSI+CiAgICA8IS0tIEFsw6dhIC0tPgogICAgPHJlY3QgeD0iMTgiIHk9IjI4IiB3aWR0aD0iMTAiIGhlaWdodD0iNiIgcng9IjMiLz4KICAgIDxyZWN0IHg9IjI1IiB5PSIyOCIgd2lkdGg9IjYiIGhlaWdodD0iMjAiIHJ4PSIzIiB0cmFuc2Zvcm09InJvdGF0ZSgxMiAyOCAzNSkiLz4KICAgIDwhLS0gQ29ycG8gZG8gY2FycmluaG8gLS0+CiAgICA8cGF0aCBkPSJNMzQgMzggTDcyIDM4IEw2NyA2MiBMMzggNjIgWiIgcng9IjQiLz4KICAgIDwhLS0gUm9kYXMgLS0+CiAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjcwIiByPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSI2MiIgY3k9IjcwIiByPSI2Ii8+CiAgPC9nPgo8L3N2Zz4=';
-var HOTSPOTS_D={"5":[{"id":"h_1772657890366","name":"ESTOJO BOX AMARELO","price":39.99,"unit":"un","sku":"31859","multiple":1,"size":32,"cx":0.3744038155802861,"cy":0.37544696066746125},{"id":"h_1772657915403","name":"ESTOJO BOX CEREJA","price":39.99,"unit":"un","sku":"31863","multiple":1,"size":32,"cx":0.8370429252782193,"cy":0.6543504171632897},{"id":"h_1772657944002","name":"ESTOJO BOX ROSA CHICLETE","price":39.99,"unit":"un","sku":"33274","multiple":1,"size":32,"cx":0.40143084260731315,"cy":0.9308700834326579},{"id":"h_1772657972892","name":"ESTOJO BOX MAGENTA","price":39.99,"unit":"un","sku":"31853","multiple":1,"size":32,"cx":0.8322734499205087,"cy":0.929678188319428}]};
+var HOTSPOTS_D={"5":[{"id":"h_1772667650456","name":"ESTOJO BOX AMARELO","price":39.99,"unit":"un","sku":"31859","multiple":1,"size":30,"cx":0.3775834658187599,"cy":0.3694874851013111},{"id":"h_1772667670231","name":"ESTOJO BOX CEREJA","price":39.99,"unit":"un","sku":"31863","multiple":1,"size":30,"cx":0.8386327503974562,"cy":0.6460071513706794},{"id":"h_1772667691444","name":"ESTOJO BOX ROSA CHICLETE","price":39.99,"unit":"un","sku":"33274","multiple":1,"size":30,"cx":0.3966613672496025,"cy":0.9272943980929678},{"id":"h_1772667711182","name":"ESTOJO BOX MAGENTA","price":39.99,"unit":"un","sku":"31853","multiple":1,"size":30,"cx":0.827503974562798,"cy":0.933253873659118}]};
 var PDF_FILENAME='Catálogo_Vini_Forte.pdf';
 var vPdf,vCurPage=1,vTotalPages=0,vRendering=false,vModalProduct=null,vCartItems=[],vSelectedSeller="";
 function showErr(msg){var l=document.getElementById("v-loading");if(l)l.style.display="none";var el=document.getElementById("vb-err");if(!el){el=document.createElement("div");el.id="vb-err";el.style.cssText="position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#8b3a30;color:#fff;padding:14px 28px;border-radius:8px;font-size:13px;z-index:9999;max-width:90%;text-align:center;";document.body.appendChild(el);}el.innerHTML=msg;el.style.display="block";}
-(async function(){var loadEl=document.getElementById('v-loading');if(loadEl)loadEl.style.display='flex';try{var resp=await fetch(PDF_FILENAME);if(!resp.ok)throw new Error('PDF nao encontrado.');var ab=await resp.arrayBuffer();vPdf=await pdfjsLib.getDocument({data:new Uint8Array(ab)}).promise;vTotalPages=vPdf.numPages;document.getElementById('v-total').textContent=vTotalPages;document.getElementById('v-pg-in').max=vTotalPages;if(loadEl)loadEl.style.display='none';vSetTitle();vInitZoom();await vRender(1);}catch(e){showErr('Erro: '+e.message);console.error(e);}})();
+(async function(){var loadEl=document.getElementById('v-loading');if(loadEl)loadEl.style.display='flex';try{var resp=await fetch(PDF_FILENAME);if(!resp.ok)throw new Error('PDF nao encontrado.');var ab=await resp.arrayBuffer();vPdf=await pdfjsLib.getDocument({data:new Uint8Array(ab)}).promise;vTotalPages=vPdf.numPages;document.getElementById('v-total').textContent=vTotalPages;document.getElementById('v-pg-in').max=vTotalPages;if(loadEl)loadEl.style.display='none';vSetTitle();vInitZoom();vInitSwipe();await vRender(1);}catch(e){showErr('Erro: '+e.message);console.error(e);}})();
 // ── Render ──────────────────────────────────────────────
 var vZoomed    = false;
 var vZoomFactor= 1.8;
@@ -932,6 +962,29 @@ function vSearchGoto(idx){
 
 // ── Catalog title ────────────────────────────────────────
 function escV(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+// ── Swipe para trocar página (mobile) ───────────────────
+function vInitSwipe(){
+  var wrap=document.getElementById('v-pdf-wrap');
+  if(!wrap)return;
+  var sx=0,sy=0,moved=false;
+  wrap.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1)return;
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;moved=false;
+  },{passive:true});
+  wrap.addEventListener('touchmove',function(e){
+    if(e.touches.length!==1)return;
+    var dx=Math.abs(e.touches[0].clientX-sx);
+    var dy=Math.abs(e.touches[0].clientY-sy);
+    if(dx>10&&dx>dy) moved=true;
+  },{passive:true});
+  wrap.addEventListener('touchend',function(e){
+    if(!moved)return;
+    var dx=e.changedTouches[0].clientX-sx;
+    if(dx< -40) vNext();
+    else if(dx>  40) vPrev();
+  },{passive:true});
+}
+
 function vSetTitle(){
   var el=document.getElementById('v-cat-title');
   if(!el)return;
