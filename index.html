@@ -272,8 +272,11 @@ canvas{display:block}
   .side-btn{display:none}
 
   /* ── Cart panel full width ── */
-  #cart-panel{width:100%;right:-100%;border-radius:0}
+  #cart-panel{width:100%;right:-100%;border-radius:0;display:flex;flex-direction:column;max-height:100vh}
   #cart-panel.open{right:0}
+  .cart-items{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .cart-footer{flex-shrink:0;display:flex !important;flex-direction:column;gap:8px}
+  #v-cart-bot{flex-shrink:0}
 
   /* ── Modais ── */
   .modal-box{width:96vw;max-height:90vh;border-radius:14px}
@@ -288,7 +291,11 @@ canvas{display:block}
   .hs-tip{font-size:9px;padding:4px 7px;max-width:130px}
   /* ── iOS: inputs >= 16px evita zoom automático ── */
   input,textarea,select{font-size:16px !important}
-}</style>
+}
+button,a,[role=button],.hs,.btn-add-cart,.btn-cancel,.btn-finish,.btn-clear,.qty-btn,.tb-icon-btn,.btn-tb-search,.modal-close-x,.cart-close-btn,.order-close{
+  touch-action:manipulation;
+}
+input,textarea,select{touch-action:manipulation;}</style>
 </head>
 <body>
 
@@ -510,7 +517,7 @@ canvas{display:block}
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 emailjs.init('F59m7bx-Dc63S4zwl');
 var CART_IMG_D='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiByeT0iMjIiIGZpbGw9IiNDMDM5MkIiLz4KICA8ZyBmaWxsPSJ3aGl0ZSI+CiAgICA8IS0tIEFsw6dhIC0tPgogICAgPHJlY3QgeD0iMTgiIHk9IjI4IiB3aWR0aD0iMTAiIGhlaWdodD0iNiIgcng9IjMiLz4KICAgIDxyZWN0IHg9IjI1IiB5PSIyOCIgd2lkdGg9IjYiIGhlaWdodD0iMjAiIHJ4PSIzIiB0cmFuc2Zvcm09InJvdGF0ZSgxMiAyOCAzNSkiLz4KICAgIDwhLS0gQ29ycG8gZG8gY2FycmluaG8gLS0+CiAgICA8cGF0aCBkPSJNMzQgMzggTDcyIDM4IEw2NyA2MiBMMzggNjIgWiIgcng9IjQiLz4KICAgIDwhLS0gUm9kYXMgLS0+CiAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjcwIiByPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSI2MiIgY3k9IjcwIiByPSI2Ii8+CiAgPC9nPgo8L3N2Zz4=';
-var HOTSPOTS_D={"5":[{"id":"h_1772710281764","name":"ESTOJO BOX AMARELO","price":39.99,"unit":"un","sku":"31859","multiple":1,"size":30,"cx":0.3791732909379968,"cy":0.3718712753277712},{"id":"h_1772710301329","name":"ESTOJO BOX CEREJA","price":39.99,"unit":"un","sku":"31863","multiple":1,"size":30,"cx":0.8434022257551669,"cy":0.6591179976162098},{"id":"h_1772710322994","name":"ESTOJO BOX ROSA CHICLETE","price":39.99,"unit":"un","sku":"33274","multiple":1,"size":30,"cx":0.4077901430842607,"cy":0.9356376638855781},{"id":"h_1772710343928","name":"ESTOJO BOX MAGENTA","price":39.99,"unit":"un","sku":"31853","multiple":1,"size":30,"cx":0.8402225755166931,"cy":0.9404052443384983}]};
+var HOTSPOTS_D={"5":[{"id":"h_1772711885230","name":"ESOTOJO BOX AMARELO","price":39.99,"unit":"un","sku":"31859","multiple":1,"size":36,"cx":0.37599364069952307,"cy":0.3706793802145411},{"id":"h_1772711909214","name":"ESTOJO BOX CEREJA","price":39.99,"unit":"un","sku":"31863","multiple":1,"size":36,"cx":0.829093799682035,"cy":0.6471990464839095},{"id":"h_1772711925599","name":"ESTOJO BOX MAGENTA","price":39.99,"unit":"un","sku":"31853","multiple":1,"size":36,"cx":0.8434022257551669,"cy":0.9225268176400476},{"id":"h_1772711945347","name":"ESTOJO BOX ROSA CHICLETE","price":39.99,"unit":"un","sku":"33274","multiple":1,"size":36,"cx":0.4014308426073132,"cy":0.9284862932061979}]};
 var PDF_FILENAME='Catálogo_Vini_Forte.pdf';
 var vPdf,vCurPage=1,vTotalPages=0,vRendering=false,vModalProduct=null,vCartItems=[],vSelectedSeller="";
 function showErr(msg){var l=document.getElementById("v-loading");if(l)l.style.display="none";var el=document.getElementById("vb-err");if(!el){el=document.createElement("div");el.id="vb-err";el.style.cssText="position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#8b3a30;color:#fff;padding:14px 28px;border-radius:8px;font-size:13px;z-index:9999;max-width:90%;text-align:center;";document.body.appendChild(el);}el.innerHTML=msg;el.style.display="block";}
@@ -968,6 +975,22 @@ function vSearchGoto(idx){
 // ── Catalog title ────────────────────────────────────────
 function escV(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 // ── Swipe para trocar página (mobile) ───────────────────
+// Bloquear zoom por pinch e double-tap em toda a página
+(function(){
+  var lt=0;
+  document.addEventListener('touchstart',function(e){
+    if(e.touches.length>1){e.preventDefault();return;}
+    var now=Date.now();
+    if(now-lt<320&&e.target.closest&&!e.target.closest('input,textarea,select')){
+      e.preventDefault();
+    }
+    lt=now;
+  },{passive:false});
+  document.addEventListener('touchmove',function(e){
+    if(e.touches.length>1) e.preventDefault();
+  },{passive:false});
+})();
+
 function vInitSwipe(){
   var wrap=document.getElementById('v-pdf-wrap');
   if(!wrap)return;
